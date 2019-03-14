@@ -7,7 +7,8 @@ const DataSchema = new Schema(
   {
     id: Number,
     title: String,
-    content: String
+    content: String,
+    tag: String
   },
   { timestamps: true }
 );

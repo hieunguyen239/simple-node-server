@@ -39,6 +39,13 @@ router.get("/getData", (req, res) => {
   });
 });
 
+router.get("/getData/tag/:tag", (req, res) => {
+  Notes.find({tag: req.params.tag}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json(data);
+  });
+});
+
 // this is our update method
 // this method overwrites existing data in our database
 router.post("/updateData", (req, res) => {
