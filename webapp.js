@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const Notes = require("./notes");
+const Tags = require('./tags');
 
 const API_PORT = 3001;
 const app = express();
@@ -39,6 +40,13 @@ router.get("/getData", (req, res) => {
   });
 });
 
+router.get("/getTags", (req, res) => {
+  Tags.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json(data);
+  });
+});
+
 router.get("/getData/tag/:tag", (req, res) => {
   Notes.find({tag: req.params.tag}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
@@ -50,6 +58,7 @@ router.get("/getData/tag/:tag", (req, res) => {
 // this method overwrites existing data in our database
 router.post("/updateData", (req, res) => {
   const { id, update } = req.body;
+  console.log(id, update);
   Notes.findOneAndUpdate(id, update, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
@@ -69,18 +78,18 @@ router.delete("/deleteData", (req, res) => {
 // this is our create methid
 // this method adds new data in our database
 router.post("/putData", (req, res) => {
-  let data = new Data();
+  let data = new Notes();
+  console.log(req.body);
+  const { title, content } = req.body;
 
-  const { id, message } = req.body;
-
-  if ((!id && id !== 0) || !message) {
-    return res.json({
-      success: false,
-      error: "INVALID INPUTS"
-    });
-  }
-  data.message = message;
-  data.id = id;
+  // if ((!id && id !== 0) || !message) {
+  //   return res.json({
+  //     success: false,
+  //     error: "INVALID INPUTS"
+  //   });
+  // }
+  data.title = title;
+  data.content = content;
   data.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
